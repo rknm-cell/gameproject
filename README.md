@@ -3,8 +3,18 @@
 
 # gameproject
 
- Game Engine - [ ] Separate game logic from React components - [ ] Track game state (board, current player, etc.) - [ ] Allow users to calculate moves - [ ] Handle move validation - [ ] Detect win/lose/draw conditions
- Frontend/React Game Interface - [ ] Display current game state - [ ] Allow players to make moves by using the game engine - [ ] Show game status (whose turn, winner, etc.) - [ ] Reset/restart game functionality
+ Game Engine - 
+ [ ] Separate game logic from React components - 
+ [ ] Track game state (board, current player, etc.) - 
+ [ ] Allow users to calculate moves - 
+ [ ] Handle move validation - 
+ [ ] Detect win/lose/draw conditions
+
+ Frontend/React Game Interface - 
+ [ ] Display current game state - 
+ [ ] Allow players to make moves by using the game engine - 
+ [ ] Show game status (whose turn, winner, etc.) - 
+ [ ] Reset/restart game functionality
 Bonus:
 
  [Styling] - Make it look sexy. Add animations for game moves (react-spring, framer, keyframes)
