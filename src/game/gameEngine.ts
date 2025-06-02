@@ -32,23 +32,23 @@ const BaseGame: Game = {
   player: "x",
 };
 
-const NewGame = structuredClone(BaseGame);
+export const NewGame = structuredClone(BaseGame);
 
-export function playerMove(player: Player, pos: number) {
+export function playerMove(game: Game, pos: number) {
   //check for valid move
-  if (NewGame.board[pos]) {
+  if (game.board[pos]) {
     return false;
   }
   //change cell to player
-  NewGame.board[pos] = NewGame.player;
+  game.board[pos] = game.player;
   // check for end state
-  if (handleEndState(player)){
-    return player
+  if (handleEndState(game.player)){
+    return game.player
   };
-  if (player === "x") {
-    NewGame.player = "o";
+  if (game.player === "x") {
+    game.player = "o";
   } else {
-    NewGame.player = "x";
+    game.player = "x";
   }
   //change player
 }
