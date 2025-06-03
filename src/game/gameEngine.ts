@@ -40,6 +40,7 @@ export function playerMove(game: Game, pos: number) {
     return false;
   }
   //change cell to player
+  console.log(game.board)
   game.board[pos] = game.player;
   // check for end state
   if (handleEndState(game.player)){
