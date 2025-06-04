@@ -1,41 +1,55 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { newGame } from "./game/gameEngine";
-import { playerMove } from "./game/gameEngine";
+import { TicTacToeApiClient } from "./api";
+import {type Game} from "./game/gameEngine";
 
 function App() {
-  const [game, setGame] = useState(newGame);
-  console.log(game);
-  const handleMove = (index: number) => {
-    if (!game.endState && !game.board[index]) {
-      const currentGame = playerMove({ ...game }, index);
-      if (currentGame) {
-        setGame(currentGame);
-      }
-    }
+  const api = useMemo(() => new TicTacToeApiClient(), [])
+  const [gameState, setGameState] = useState<Game | undefined>();
+
+  async function initializeGame(){
+    const initialState = await api.newGame()
+    setGameState(initialState)
+  }
+  useEffect(() => {
+    initializeGame()
+  }, []);
+
+  
+
+  async function handleMove(index: number){
+      const game = await api.playerMove(gameState!.id, index);
+      setGameState(game)
+    
   };
 
   const handleNewGame = () => {
-    setGame(newGame);
+    setGameState(newGame);
   };
+  if (!gameState) {
+    return (
+      <div>Loading...</div>
+    )
+  }
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen min-w-screen bg-gray-700">
       <h1 className="text-3xl font-bold mb-4">TicTacToe</h1>
       <div>
         <h2 className="text-lg">
-          {game.endState
-            ? `Winner: ${game.endState}`
-            : `Current Player: ${game.player}`}
+          {gameState.endState
+            ? `Winner: ${gameState.endState}`
+            : `Current Player: ${gameState.player}`}
         </h2>
       </div>
 
       <div className="grid grid-cols-3 gap-3">
-        {game.board.map((cell, index) => (
+        {gameState.board.map((cell, index) => (
           <button
             key={index}
             className="w-20 h-20 border border-gray-400 rounded flex items-center justify-center text-2xl font-bold"
             onClick={() => handleMove(index)}
-            disabled={cell || game.endState ? true : false}
+            disabled={cell || gameState.endState ? true : false}
           >
             {cell}
           </button>
