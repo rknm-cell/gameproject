@@ -2,12 +2,13 @@
 //
 
 // create types for board, player, blocks, score, endstate, clearstate,
-type Cell = "o" | "x" | null;
-type Board = [Cell, Cell, Cell, Cell, Cell, Cell, Cell, Cell, Cell];
-type Player = "o" | "x";
-type EndState = "o" | "x" | "tie" | undefined;
+export type Cell = "o" | "x" | null;
+export type Board = [Cell, Cell, Cell, Cell, Cell, Cell, Cell, Cell, Cell];
+export type Player = "o" | "x";
+export type EndState = "o" | "x" | "tie" | undefined;
 
-type Game = {
+export type Game = {
+  id: string;
   board: Board;
   player: Player;
   endState?: EndState;
@@ -28,6 +29,7 @@ const winStates: number[][] = [
 //declare a gameboard with a type of Board and the board is null
 
 const baseGame: Game = {
+  id: crypto.randomUUID(),
   board: [null, null, null, null, null, null, null, null, null],
   player: "x",
 };
@@ -35,13 +37,8 @@ const baseGame: Game = {
 export const newGame = structuredClone(baseGame);
 
 export function playerMove(game: Game, pos: number) {
-  //check for valid move
 
-  if (game.board[pos]) {
-    return false;
-
-  }
-  const newBoard = [...game.board];
+  const newBoard = [...game.board] as Board;
   newBoard[pos] = game.player
 
   const newGame: Game = {
