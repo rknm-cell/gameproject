@@ -1,12 +1,12 @@
 import express from "express";
 import ViteExpress from "vite-express";
-import { InMemoryTicTacToeApi } from "./src/api";
-
-const api = new InMemoryTicTacToeApi()
-
+import { DbTicTacToeApi } from "./src/db";
 const app = express();
-const PORT = 3000;
 app.use(express.json())
+
+const api = new DbTicTacToeApi()
+
+const PORT = 3000;
 
 app.get("/api/game/:gameId", async (req, res) => {
   const game = await api.getGame(req.params.gameId);
