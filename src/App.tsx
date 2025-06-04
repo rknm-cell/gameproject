@@ -24,7 +24,7 @@ function App() {
   };
 
   const handleNewGame = () => {
-    setGameState(newGame);
+    initializeGame();
   };
   if (!gameState) {
     return (
@@ -36,7 +36,7 @@ function App() {
     <div className="flex flex-col items-center justify-center min-h-screen min-w-screen bg-gray-700">
       <h1 className="text-3xl font-bold mb-4">TicTacToe</h1>
       <div>
-        <h2 className="text-lg">
+        <h2 className="text-xl mb-4 font-bold">
           {gameState.endState
             ? `Winner: ${gameState.endState}`
             : `Current Player: ${gameState.player}`}
@@ -47,7 +47,7 @@ function App() {
         {gameState.board.map((cell, index) => (
           <button
             key={index}
-            className="w-20 h-20 border border-gray-400 rounded flex items-center justify-center text-2xl font-bold"
+            className="w-20 h-20 border border-gray-400 rounded flex items-center justify-center font-bold"
             onClick={() => handleMove(index)}
             disabled={cell || gameState.endState ? true : false}
           >
