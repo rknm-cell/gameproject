@@ -13,6 +13,9 @@
     "@tailwindcss/vite": "^4.1.8",
     "@types/jest": "^29.5.14",
     "@types/mocha": "^10.0.10",
+    "@types/node": "^22.15.30",
+    "@types/socket.io": "^3.0.2",
+    "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "drizzle-orm": "^0.44.2",
     "express": "^5.1.0",
@@ -20,6 +23,8 @@
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router": "^7.6.2",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1",
     "supabase": "^2.24.3",
     "tailwindcss": "^4.1.8",
     "vite-express": "^0.21.1"

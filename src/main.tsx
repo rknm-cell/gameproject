@@ -6,6 +6,7 @@ import { createBrowserRouter, RouterProvider } from "react-router";
 import { TicTacToeApiClient } from "./api.ts";
 import Lobby from "./Lobby.tsx";
 import GameView from "./GameView.tsx";
+import Test from "./Test.tsx";
 
 const api = new TicTacToeApiClient();
 
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
           }
         },
       },
+      {
+        path: "/test",
+        Component: Test
+      }
     ],
   },
 ]);
