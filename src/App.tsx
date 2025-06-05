@@ -6,7 +6,6 @@ function App() {
 
   return (
    <div className="text-black">
-    Tic Tac Toe, baby
     <Outlet />
     </div>
   );
