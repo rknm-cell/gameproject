@@ -4,6 +4,7 @@ export interface TicTacToeApi {
   newGame(): Promise<Game>;
   playerMove(gameId: string, pos: number): Promise<Game>;
   getGame(gameId: string): Promise<Game>;
+  getGames(): Promise<Game[]>;
 }
 
 export class InMemoryTicTacToeApi implements TicTacToeApi {
@@ -14,6 +15,7 @@ export class InMemoryTicTacToeApi implements TicTacToeApi {
     this.games.set(game.id, game);
     return game;
   }
+  
 
   async getGame(gameId: string): Promise<Game> {
     const game = this.games.get(gameId);
@@ -21,6 +23,12 @@ export class InMemoryTicTacToeApi implements TicTacToeApi {
       throw new Error("Game not found");
     }
     return game;
+  }
+
+  async getGames(): Promise<Game[]>{
+    
+    return Promise.resolve(Array.from(this.games.values()))
+    
   }
 
   async playerMove(
@@ -49,6 +57,13 @@ export class TicTacToeApiClient implements TicTacToeApi {
     const response = await fetch(`/api/game/${gameId}`);
     const game = await response.json();
     return game;
+  }
+  
+
+  async getGames():Promise<Game[]>{
+    const response = await fetch(`/api/games`)
+    const games = await response.json()
+    return games
   }
 
   async playerMove(gameId: string, pos: number): Promise<Game> {
