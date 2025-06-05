@@ -5,7 +5,7 @@ function App() {
   
 
   return (
-   <div className="text-black">
+   <div className="text-black flex flex-col justify-center">
     <Outlet />
     </div>
   );

@@ -1,14 +1,25 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { type Game } from "./game/gameEngine";
 import { TicTacToeApiClient } from "./api";
 import { useLoaderData } from "react-router";
+import { io } from "socket.io-client";
 
 function GameView() {
   const api = useMemo(() => new TicTacToeApiClient(), []);
 
+  
   const { game } = useLoaderData<{game: Game}>();
   const [gameState, setGameState] = useState<Game>(game);
   
+  useEffect(() => {
+    const socket = io("http://localhost:3000");
+    socket.on("gameUpdate",(updatedGame: Game) => {
+      setGameState(updatedGame);
+      
+
+    })
+  },[game.id])
+
   async function initializeGame() {
     const initialState = await api.newGame();
     setGameState(initialState);
