@@ -7,9 +7,10 @@ function Lobby() {
   const [games, setGames] = useState<Game[]>(intialGames);
 
   return (
-    <div>
+    <div id="Game-lobby" className="">
       <h2>Game Lobby</h2>
       It's the game lobby, baby
+      <p>Pick a game</p>
       {games.map((game, index) => (
         <div key={game.id}>
           <Link to={`/game/${game.id}`}>Game {index + 1}</Link>
