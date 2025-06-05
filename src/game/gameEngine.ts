@@ -1,7 +1,4 @@
-//tetris
-//
 
-// create types for board, currentPlayer, blocks, score, endstate, clearstate,
 export type Cell = "o" | "x" | null;
 export type Board = [Cell, Cell, Cell, Cell, Cell, Cell, Cell, Cell, Cell];
 export type Player = "o" | "x";

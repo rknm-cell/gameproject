@@ -12,6 +12,10 @@ app.get("/api/game/:gameId", async (req, res) => {
   const game = await api.getGame(req.params.gameId);
   res.json(game);
 });
+app.get("/api/games", async (req, res) => {
+  const games = await api.getGames()
+  res.json(games)
+})
 
 app.post("/api/game", async (req, res)=> {
     const game = await api.newGame()
