@@ -9,9 +9,8 @@ function Lobby() {
   return (
     <div id="Game-lobby" className="">
       <h2 className="flex justify-center">Game Lobby</h2>
-      
       <p className="flex justify-center">Pick a game</p>
-      {games.map((game, index) => (
+      {games.filter((game) => !game.endState).map((game, index) => (
         <div key={game.id} className="flex justify-center font-bold">
           <Link to={`/game/${game.id}`}>Game {index + 1}</Link>
         </div>

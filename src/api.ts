@@ -1,3 +1,4 @@
+import { SERVER_URL } from "../constants";
 import { type Game, newGame, playerMove } from "./game/gameEngine";
 
 export interface TicTacToeApi {
@@ -43,8 +44,12 @@ export class InMemoryTicTacToeApi implements TicTacToeApi {
 }
 
 export class TicTacToeApiClient implements TicTacToeApi {
+
+  
+
+
   async newGame(): Promise<Game> {
-    const response = await fetch("/api/game", {
+    const response = await fetch(`${SERVER_URL}/api/game`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -54,20 +59,20 @@ export class TicTacToeApiClient implements TicTacToeApi {
     return game;
   }
   async getGame(gameId: string): Promise<Game> {
-    const response = await fetch(`/api/game/${gameId}`);
+    const response = await fetch(`${SERVER_URL}/api/game/${gameId}`);
     const game = await response.json();
     return game;
   }
   
 
   async getGames():Promise<Game[]>{
-    const response = await fetch(`/api/games`)
+    const response = await fetch(`${SERVER_URL}/api/games`)
     const games = await response.json()
     return games
   }
 
   async playerMove(gameId: string, pos: number): Promise<Game> {
-    const response = await fetch(`/api/game/${gameId}/move`, {
+    const response = await fetch(`${SERVER_URL}/api/game/${gameId}/move`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

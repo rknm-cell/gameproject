@@ -3,28 +3,31 @@ import { type Game } from "./game/gameEngine";
 import { TicTacToeApiClient } from "./api";
 import { useLoaderData } from "react-router";
 import { io } from "socket.io-client";
+import { SERVER_URL } from "../constants";
 
 function GameView() {
   const api = useMemo(() => new TicTacToeApiClient(), []);
 
-  
-  const { game } = useLoaderData<{game: Game}>();
+  const { game } = useLoaderData<{ game: Game }>();
   const [gameState, setGameState] = useState<Game>(game);
-  
+
   useEffect(() => {
-    const socket = io("http://localhost:3000");
-    socket.on("gameUpdate",(updatedGame: Game) => {
+    const socket = io(SERVER_URL);
+    socket.on("gameUpdate", (updatedGame: Game) => {
       setGameState(updatedGame);
       
+    });
+    socket.emit("join", game.id);
 
-    })
-  },[game.id])
+    return () => {
+      socket.disconnect();
+    };
+  }, [game.id]);
 
   async function initializeGame() {
     const initialState = await api.newGame();
     setGameState(initialState);
   }
-  console.log(gameState);
 
   async function handleMove(index: number) {
     const game = await api.playerMove(gameState!.id, index);
@@ -45,7 +48,6 @@ function GameView() {
             : `Current Player: ${gameState.currentPlayer}`}
         </h2>
       </div>
-
 
       <div className="grid grid-cols-3 gap-3">
         {gameState.board.map((cell, index) => (
