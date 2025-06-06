@@ -9,8 +9,8 @@ const app = express();
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: CLIENT_URL
-  }
+    origin: CLIENT_URL,
+  },
 });
 
 app.use(express.json());
@@ -24,11 +24,18 @@ app.use(
 const api = new DbTicTacToeApi();
 
 io.on("connection", (socket) => {
-  
   console.log("a user connected: ", socket.id);
 
-  socket.emit("Testconnection", {message: "Hello!"})
-  
+  socket.on("join", async (gameId: string) => {
+    const game = await api.getGame(gameId);
+
+    if (!game) {
+      console.error("Game not found: ", gameId);
+    }
+  });
+
+  socket.emit("Testconnection", { message: "Hello!" });
+
   socket.on("disconnect", () => {
     console.log("user disconnected: ", socket.id);
   });
@@ -54,6 +61,4 @@ app.post("/api/game/:gameId/move", async (req, res) => {
   res.json(game);
 });
 
-server.listen(PORT, () =>
-  console.log(`Server is listening on ${SERVER_URL}`)
-);
+server.listen(PORT, () => console.log(`Server is listening on ${SERVER_URL}`));
