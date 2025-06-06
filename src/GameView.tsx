@@ -15,9 +15,9 @@ function GameView() {
     const socket = io(SERVER_URL);
     socket.on("gameUpdate", (updatedGame: Game) => {
       setGameState(updatedGame);
-      socket.emit("join", game.id);
       
     });
+    socket.emit("join", game.id);
 
     return () => {
       socket.disconnect();
