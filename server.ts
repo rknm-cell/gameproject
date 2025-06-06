@@ -32,7 +32,7 @@ app.use(
 
 const api = new DbTicTacToeApi();
 const playerAssignment: PlayerAssignment = {};
-const gameStates = {};
+// const gameStates = {};
 
 
 
@@ -50,36 +50,50 @@ io.on("connection", (socket) => {
     console.log(lobbyId);
     io.to(lobbyId).emit(`Lobby ${lobbyId}`);
 
-    if (!playerAssignment[gameId]) {
-      playerAssignment[gameId] = {};
-    }
-    const playersInGame = Object.keys(playerAssignment[gameId]).length
-    let playerSymbol: Player;
-    if (playersInGame === 0){
-      playerSymbol = "x";
-    } else if (playersInGame === 1){
-      playerSymbol = "o";
-    } else {
-      console.log("Lobby full ");
-      return;
-    }
-    playerAssignment[gameId][socket.id] = playerSymbol;
+  //   if (!playerAssignment[gameId]) {
+  //     playerAssignment[gameId] = {};
+  //   }
+  //   const playersInGame = Object.keys(playerAssignment[gameId]).length
+  //   let playerSymbol: Player;
+  //   if (playersInGame === 0){
+  //     playerSymbol = "x";
+  //   } else if (playersInGame === 1){
+  //     playerSymbol = "o";
+  //   } else {
+  //     console.log("Lobby full ");
+  //     return;
+  //   }
+  //   playerAssignment[gameId][socket.id] = playerSymbol;
 
-    socket.join(makeLobbyId(game));
+  //   socket.join(makeLobbyId(game));
 
-    socket.emit('Player: ', playerSymbol);
+  //   socket.emit('Player: ', playerSymbol);
 
-    if (!gameStates[gameId]){
-      gameStates[gameId] = {
-        board: game.board,
-        currentPlayer: 'x',
-      }
-    }
-    socket.emit('gameState', gameStates[gameId])
+  //   if (!gameStates[gameId]){
+  //     gameStates[gameId] = {
+  //       board: game.board,
+  //       currentPlayer: 'x',
+  //     }
+  //   }
+  //   socket.emit('gameState', gameStates[gameId])
 
   });
 
   socket.emit("Testconnection", { message: "Hello!" });
+
+  // socket.on('makeMove', async ({ gameId, pos}) => {
+  //   const playerSymbol = playerAssignment[gameId][socket.id];
+  //   const gameState = gameStates[gameId];
+
+  //   if (playerSymbol !== gameState.currentPlayer){
+  //     socket.emit('invalidMove', 'Hold on');
+  //     return;
+  //   }
+
+  //   gameState.currentPlayer = gameState.currentPlayer === 'x' ? 'o' : 'x';
+
+  //   io.to(makeLobbyId(game)).emit('gameState', gameState);
+  // })
 
   socket.on("disconnect", () => {
     console.log("user disconnected: ", socket.id);
