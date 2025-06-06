@@ -16,7 +16,6 @@ export class InMemoryTicTacToeApi implements TicTacToeApi {
     this.games.set(game.id, game);
     return game;
   }
-  
 
   async getGame(gameId: string): Promise<Game> {
     const game = this.games.get(gameId);
@@ -26,16 +25,11 @@ export class InMemoryTicTacToeApi implements TicTacToeApi {
     return game;
   }
 
-  async getGames(): Promise<Game[]>{
-    
-    return Promise.resolve(Array.from(this.games.values()))
-    
+  async getGames(): Promise<Game[]> {
+    return Promise.resolve(Array.from(this.games.values()));
   }
 
-  async playerMove(
-    gameId: string,
-    pos: number
-  ): Promise<Game> {
+  async playerMove(gameId: string, pos: number): Promise<Game> {
     const game = await this.getGame(gameId);
     const newGame = playerMove(game, pos);
     this.games.set(gameId, newGame);
@@ -44,10 +38,6 @@ export class InMemoryTicTacToeApi implements TicTacToeApi {
 }
 
 export class TicTacToeApiClient implements TicTacToeApi {
-
-  
-
-
   async newGame(): Promise<Game> {
     const response = await fetch(`${SERVER_URL}/api/game`, {
       method: "POST",
@@ -63,12 +53,11 @@ export class TicTacToeApiClient implements TicTacToeApi {
     const game = await response.json();
     return game;
   }
-  
 
-  async getGames():Promise<Game[]>{
-    const response = await fetch(`${SERVER_URL}/api/games`)
-    const games = await response.json()
-    return games
+  async getGames(): Promise<Game[]> {
+    const response = await fetch(`${SERVER_URL}/api/games`);
+    const games = await response.json();
+    return games;
   }
 
   async playerMove(gameId: string, pos: number): Promise<Game> {

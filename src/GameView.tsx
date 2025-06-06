@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect } from "react";
-import { type Game } from "./game/gameEngine";
+import { type Game, type Player } from "./game/gameEngine";
 import { TicTacToeApiClient } from "./api";
 import { useLoaderData } from "react-router";
 import { io } from "socket.io-client";
@@ -11,11 +11,26 @@ function GameView() {
   const { game } = useLoaderData<{ game: Game }>();
   const [gameState, setGameState] = useState<Game>(game);
 
+  const [playerSymbol, setPlayerSymbol] = useState<Player>();
+  const [playerTurn, setPlayerTurn] = useState<boolean>();
+
   useEffect(() => {
     const socket = io(SERVER_URL);
+    socket.on("playerAssignment", (symbol) => {
+      setPlayerSymbol(symbol);
+      setPlayerTurn(symbol === "x");
+    });
+
+    socket.on("gameState", (gameState) => {
+      setGameState(gameState);
+      setPlayerTurn(playerSymbol === gameState.currentPlayer);
+    });
+    socket.on("invalidMove", (message) => {
+      console.log(message);
+    });
+
     socket.on("gameUpdate", (updatedGame: Game) => {
       setGameState(updatedGame);
-      
     });
     socket.emit("join", game.id);
 
@@ -30,6 +45,9 @@ function GameView() {
   }
 
   async function handleMove(index: number) {
+    if (!playerTurn) {
+      alert("Hold on! Wait a minute! It/'s not your turn yet");
+    }
     const game = await api.playerMove(gameState!.id, index);
     setGameState(game);
   }
@@ -55,7 +73,7 @@ function GameView() {
             key={index}
             className="w-20 h-20 border bg-blue-900 m-2 border-blue-950 shadow-2xl rounded flex text-2xl text-gray-200 items-center justify-center font-bold"
             onClick={() => handleMove(index)}
-            disabled={cell || gameState.endState ? true : false}
+            disabled={cell || gameState.endState || !playerTurn ? true : false}
           >
             {cell}
           </button>

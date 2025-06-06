@@ -1,10 +1,14 @@
 import express from "express";
 import { DbTicTacToeApi } from "./src/db";
 import cors from "cors";
-import type { Game } from "./src/game/gameEngine";
+import type { Game, Player } from "./src/game/gameEngine";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import { CLIENT_URL, PORT, SERVER_URL } from "./constants";
+
+interface PlayerAssignment {
+  [gameId: string]: { [sockeId: string]: Player};
+}
 
 const app = express();
 const server = createServer(app);
@@ -15,7 +19,7 @@ const io = new Server(server, {
   },
 });
 
-const makeLobbyId = (game: Game) => `lobby-${game.id}`
+const makeLobbyId = (game: Game) => `lobby-${game.id}`;
 
 app.use(express.json());
 
@@ -25,7 +29,12 @@ app.use(
     methods: ["GET", "POST"],
   })
 );
+
 const api = new DbTicTacToeApi();
+const playerAssignment: PlayerAssignment = {};
+const gameStates = {};
+
+
 
 io.on("connection", (socket) => {
   console.log("a user connected: ", socket.id);
@@ -37,15 +46,51 @@ io.on("connection", (socket) => {
       console.error("Game not found: ", gameId);
     }
     const lobbyId = makeLobbyId(game);
-    socket.join(lobbyId)
-    console.log(lobbyId)
-    io.to(lobbyId).emit(`Lobby ${lobbyId}`)
+    socket.join(lobbyId);
+    console.log(lobbyId);
+    io.to(lobbyId).emit(`Lobby ${lobbyId}`);
+
+    if (!playerAssignment[gameId]) {
+      playerAssignment[gameId] = {};
+    }
+    const playersInGame = Object.keys(playerAssignment[gameId]).length
+    let playerSymbol: Player;
+    if (playersInGame === 0){
+      playerSymbol = "x";
+    } else if (playersInGame === 1){
+      playerSymbol = "o";
+    } else {
+      console.log("Lobby full ");
+      return;
+    }
+    playerAssignment[gameId][socket.id] = playerSymbol;
+
+    socket.join(makeLobbyId(game));
+
+    socket.emit('Player: ', playerSymbol);
+
+    if (!gameStates[gameId]){
+      gameStates[gameId] = {
+        board: game.board,
+        currentPlayer: 'x',
+      }
+    }
+    socket.emit('gameState', gameStates[gameId])
+
   });
-  
+
   socket.emit("Testconnection", { message: "Hello!" });
 
   socket.on("disconnect", () => {
     console.log("user disconnected: ", socket.id);
+
+    for (const gameId in playerAssignment){
+      if (playerAssignment[gameId][socket.id]){
+        delete playerAssignment[gameId][socket.id];
+        console.log(`Player ${socket.id} removed from game ${gameId}`);
+        break;
+      }
+    }
   });
 });
 
@@ -65,7 +110,6 @@ app.get("/api/game/:gameId", async (req, res) => {
 });
 
 app.post("/api/game/:gameId/move", async (req, res) => {
-  // const game = await api.playerMove(req.params.gameId, req.body.pos);
   const gameId = req.params.gameId;
   const pos = req.body.pos;
   const updatedGame = await api.playerMove(gameId, pos);
