@@ -1,10 +1,11 @@
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useCallback } from "react";
 import { type Cell, type Game } from "./game/gameEngine";
 // import { type Player } from "./game/gameEngine";
 import { TicTacToeApiClient } from "./api";
 import { useLoaderData } from "react-router";
 import { io } from "socket.io-client";
 import { SERVER_URL } from "../constants";
+
 
 function GameView() {
   const api = useMemo(() => new TicTacToeApiClient(), []);
@@ -14,6 +15,13 @@ function GameView() {
 
   // const [playerSymbol, setPlayerSymbol] = useState<Player>();
   // const [playerTurn, setPlayerTurn] = useState<boolean>();
+
+  const playClickSound = useCallback(() => {
+    const audio = new Audio('./assets/pencil_mark.mp3');
+    audio.play().catch(error => console.log('Audio failed', error))
+
+  }, []);
+  
 
   useEffect(() => {
     const socket = io(SERVER_URL);
@@ -46,6 +54,8 @@ function GameView() {
   }
 
   async function handleMove(index: number) {
+    playClickSound();
+    
     // if (!playerTurn) {
     //   alert("Hold on! Wait a minute! It/'s not your turn yet");
     // }
@@ -72,7 +82,7 @@ function GameView() {
       return (
         <button
           key={index}
-          className={`w-20 h-20 ${borders} bg-transparent flex text-zinc-600 items-center justify-center font-light text-3xl`}
+          className={`w-20 h-20 ${borders} bg-transparent flex text-zinc-500 items-center justify-center font-light text-3xl`}
           onClick={() => handleMove(index)}
           disabled={cell || gameState.endState ? true : false}
         >
@@ -83,13 +93,15 @@ function GameView() {
   }
 
   return (
+    <div className="flex bg-zinc-500 bg-contain bg-[url(./assets/notepaper.jpg)]">
+
     <div
-      id="bg-notepaper"
-      className="flex flex-col items-center justify-center min-h-screen min-w-screen bg-gray-300 bg-contain bg-[url(./assets/notepaper.jpg)]"
+      id="div-tictactoe"
+      className="flex flex-col items-center justify-center min-h-screen min-w-screen "
     >
-      <h1 className="text-3xl font-bold mb-4 text-zinc-600">TicTacToe</h1>
+      <h1 className="text-3xl font-bold mb-4 text-zinc-500">TicTacToe</h1>
       <div>
-        <h2 className="text-xl mb-4 font-bold text-zinc-600 ">
+        <h2 className="text-xl mb-4 font-bold text-zinc-500 ">
           {gameState.endState
             ? `Winner: ${gameState.endState}`
             : `Current Player: ${gameState.currentPlayer}`}
@@ -99,28 +111,20 @@ function GameView() {
         <div
           id="gameboard-div-buttons"
           className="inset-0  grid grid-cols-3 gap-0 z-2"
-        >
-          {/* {gameState.board.map((cell, index) => (
-            <button
-              key={index}
-              className="w-20 h-20 ${borders} bg-transparent flex text-2xl text-zinc-600 border-2 items-center justify-center font-bold"
-              onClick={() => handleMove(index)}
-              disabled={cell || gameState.endState ? true : false}
-            >
-              {cell}
-            </button>
-          ))} */}
+          >
+          
           {handleRenderGameboard(gameState)}
         </div>
       </div>
 
       <button
-        className="mt-4 px-4 py-2 text-zinc-700 rounded font-rounded hover:font-bold focus:ring-1 focus:ring-blue-400"
+        className="mt-4 px-4 py-2 text-zinc-500 rounded font-rounded hover:font-bold focus:ring-1 focus:ring-zinc-500"
         onClick={handleNewGame}
-      >
+        >
         New Game
       </button>
     </div>
+        </div>
   );
 }
 

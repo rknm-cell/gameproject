@@ -7,11 +7,11 @@ function Lobby() {
   const [games] = useState<Game[]>(intialGames);
 
   return (
-    <div id="Game-lobby" className="">
-      <h2 className="flex justify-center">Game Lobby</h2>
-      <p className="flex justify-center">Pick a game</p>
+    <div id="Game-lobby" className="flex flex-col min-h-screen min-w-screen bg-zinc-500 bg-contain bg-[url(./assets/notepaper.jpg)]">
+      <h2 className="flex justify-center text-zinc-500">Game Lobby</h2>
+      <p className="flex justify-center text-zinc-500 ">Pick a game</p>
       {games.filter((game) => !game.endState).map((game, index) => (
-        <div key={game.id} className="flex justify-center font-bold">
+        <div key={game.id} className="flex justify-center text-zinc-500 font-light">
           <Link to={`/game/${game.id}`}>Game {index + 1}</Link>
         </div>
       ))}
