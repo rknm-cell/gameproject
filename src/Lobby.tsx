@@ -4,7 +4,7 @@ import { useState } from "react";
 
 function Lobby() {
   const { games: intialGames } = useLoaderData<{ games: Game[] }>();
-  const [games, setGames] = useState<Game[]>(intialGames);
+  const [games] = useState<Game[]>(intialGames);
 
   return (
     <div id="Game-lobby" className="">
