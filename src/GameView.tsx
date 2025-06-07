@@ -72,7 +72,7 @@ function GameView() {
       return (
         <button
           key={index}
-          className={`w-20 h-20 ${borders} bg-transparent flex text-2xl text-zinc-600 items-center justify-center font-light text-3xl`}
+          className={`w-20 h-20 ${borders} bg-transparent flex text-zinc-600 items-center justify-center font-light text-3xl`}
           onClick={() => handleMove(index)}
           disabled={cell || gameState.endState ? true : false}
         >
@@ -115,7 +115,7 @@ function GameView() {
       </div>
 
       <button
-        className="mt-4 px-4 py-2 text-zinc-700 rounded font-rounded hover:font-bold hover:font-bold focus:ring-1 focus:ring-blue-400"
+        className="mt-4 px-4 py-2 text-zinc-700 rounded font-rounded hover:font-bold focus:ring-1 focus:ring-blue-400"
         onClick={handleNewGame}
       >
         New Game
