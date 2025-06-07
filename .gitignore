@@ -10,7 +10,7 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
-*.local
+*.logit config pull.ff only  al
 
 # Editor directories and files
 .vscode/*
